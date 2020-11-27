@@ -12,14 +12,14 @@ if __name__ == '__main__' :
         #os.environ["SIMEXE"] = '/path/to/SDHCALSim/bin/SDHCALSim'
 	os.environ["SIMEXE"] = '/Users/libo/workplace/ECALSim/bin/SDHCALSimUI'
 
-	particle = 'pi0'
-	energy = 30
+	particle = 'gamma'
+	energy = 60
 
 
 	params = sim.Params()
 	params.physicsList = 'QGSP_BERT'
 	params.nEvent = 10
-	params.seed = 0
+	params.seed = 1
 	params.outputFileName = 'SDHCALSimUI'
 	
 	params.oldConfig = False

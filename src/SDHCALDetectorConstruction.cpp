@@ -60,7 +60,7 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 	G4int nLayers = 30 ; // 30
 	G4int nPadX = 384*2 ;
 	G4int nPadY = 312*2 ;
-	G4double padSize = 10.1*CLHEP::mm ;
+	G4double padSize = 10.1/2.*CLHEP::mm ;
 
 	G4double caloSizeX = nPadX*padSize ;
 	G4double caloSizeY = nPadY*padSize ;
@@ -78,7 +78,6 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 	//	absorberMaterial = G4Material::GetMaterial("SDHCAL_Steel304L_Old" , true) ;
 
 	if(absorberMaterial == nullptr) G4cout << "Error: absorberMaterial is null" << G4endl;
-
 
 	// World
 	G4Box* solidWorld = new G4Box("World", worldSize/2 , worldSize/2 , worldSize/2) ;

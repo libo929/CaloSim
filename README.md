@@ -1,3 +1,4 @@
+# CaloSim
 1) Installation
 
 1.1) Installation with ilcsoft
@@ -27,4 +28,3 @@ set the correct `SIMEXE` env variable in script/example.py
 to run :
 
 	./script/example.py
-# CaloSim
