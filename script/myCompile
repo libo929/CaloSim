@@ -1,0 +1,81 @@
+#!/bin/bash
+
+function endRun()
+{
+	echo ""
+	echo "---->>> end"
+	exit
+}
+
+#---------------------------------------------------------------------------------
+
+inputSRC=$1
+
+thisFileName=`basename "$0"`
+fileLocation=`which $thisFileName`
+
+echo "---->>> start: script "$fileLocation" is going to compile "$inputSRC
+echo ""
+
+if [ -z $inputSRC ] 
+then
+	echo "specify input source file"
+	endRun
+fi
+
+#---------------------------------------------------------------------------------
+
+if [ -z $LCIO ] || [ -z $ROOTSYS ]
+then
+	echo "LCIO or ROOTSYS should be set"
+	endRun
+else
+	searchConfig=`root-config --cflags 2>/dev/null`
+
+	if [ ${#searchConfig} == 0 ]
+	then
+		echo "root-config can not be found"
+		endRun
+	fi
+fi
+
+#---------------------------------------------------------------------------------
+
+function compileFile()
+{
+	src=$1
+	bin=${inputSRC%.*}
+
+	MARLINUTIL=${ILCSOFT}/MarlinUtil/v01-14
+
+	cmd="g++ -o $bin $src \
+		-I$LCIO/include `root-config --cflags`  -I$MARLINUTIL/include \
+		-L$LCIO/lib -llcio -llcioDict `root-config --glibs`
+		-L/Users/libo/Projects/ilcsoft/v02-00-02/MarlinUtil/v01-15-01/lib" 
+#-L$LCIO/lib -llcio -llcioDict `root-config --glibs` -lMathMore -L$MARLINUTIL/lib -lMarlinUtil" 
+	echo $cmd
+	$cmd
+}
+
+#---------------------------------------------------------------------------------
+
+if [ -f $inputSRC ]
+then
+	suffix1=${inputSRC:0-3}
+	suffix2=${inputSRC:0-4}
+
+	if [ $suffix1 == ".cc" ] || [ $suffix1 == ".CC" ] || [ $suffix2 == ".cxx" ]
+	then
+		compileFile $inputSRC
+	else
+		echo "source file should end up with .cc, .CC, .cxx"
+	fi
+
+else
+	echo $inputSRC" does not exsit"
+fi
+
+endRun
+
+#---------------------------------------------------------------------------------
+
