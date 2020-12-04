@@ -3,13 +3,14 @@
 import os
 import sys
 import math
+import getopt
 
-import SDHCALSim as sim
+import CaloSim as sim
 
 particle = 'pi0'   # partile type 
 energy   = 40      # GeV
-#useUI    = False   # use User Interface
-useUI    = True # use User Interface
+useUI    = False   # use User Interface
+#useUI    = True # use User Interface
 
 
 if __name__ == '__main__' :
