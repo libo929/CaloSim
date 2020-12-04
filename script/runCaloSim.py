@@ -17,9 +17,9 @@ if __name__ == '__main__' :
         exeDir = sys.path[0]
 
         if useUI:
-            exeDir = os.path.join(exeDir, '../bin/SDHCALSimUI')
+            exeDir = os.path.join(exeDir, '../bin/CaloSimUI')
         else:
-            exeDir = os.path.join(exeDir, '../bin/SDHCALSim')
+            exeDir = os.path.join(exeDir, '../bin/CaloSim')
 	os.environ["SIMEXE"] = exeDir
 
 	params = sim.Params()
@@ -28,9 +28,9 @@ if __name__ == '__main__' :
 	params.seed = 1
 
         if useUI:
-            params.outputFileName = 'SDHCALSimUI_' + particle + '_' + str(energy) + 'GeV'
+            params.outputFileName = 'CaloSimUI_' + particle + '_' + str(energy) + 'GeV'
         else:
-            params.outputFileName = 'SDHCALSim_' + particle + '_' + str(energy) + 'GeV'
+            params.outputFileName = 'CaloSim_' + particle + '_' + str(energy) + 'GeV'
 
 	
 	params.oldConfig = False
