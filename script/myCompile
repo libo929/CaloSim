@@ -50,7 +50,7 @@ function compileFile()
 
 	cmd="g++ -o $bin $src \
 		-I$LCIO/include `root-config --cflags`  -I$MARLINUTIL/include \
-		-L$LCIO/lib -llcio -llcioDict `root-config --glibs`
+		-L$LCIO/lib -llcio `root-config --glibs`
 		-L/Users/libo/Projects/ilcsoft/v02-00-02/MarlinUtil/v01-15-01/lib" 
 #-L$LCIO/lib -llcio -llcioDict `root-config --glibs` -lMathMore -L$MARLINUTIL/lib -lMarlinUtil" 
 	echo $cmd
