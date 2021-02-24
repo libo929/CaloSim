@@ -1,6 +1,8 @@
-///////////////////////////////////////////////////////////
 void drawHits()
 {
+	//const string drawOption = "lego";
+	const string drawOption = "colz";
+
 	TFile* f = new TFile("caloHits.root");
 
 	TTree* inTree = (TTree*)gDirectory->Get("ce");
@@ -33,17 +35,17 @@ void drawHits()
 
 	///////////////////////
 	
-	TH2F* hist = new TH2F("hist", "hist", 100, 350, 450, 100, 250, 350);
+    TCanvas* c1 = new TCanvas("c1","Hits",10, 10, 600, 600);
 
-	int maxEvt = 1;
+	TH2F* hist = new TH2F("hitsHist", "calo hits", 100, 350, 450, 100, 250, 350);
+
+	int maxEvt = 10000;
 
 	if(maxEvt > inTree->GetEntries()) maxEvt = inTree->GetEntries();
 
 	for(unsigned int evt = 0; evt < maxEvt; ++evt)
 	{
 		inTree->GetEntry(evt);
-
-		std::cout << "evt: " << evt << ", hit #: " << hitSize << std::endl;
 
 		for(int i = 0; i < hitSize; ++i)
 		{
@@ -53,8 +55,21 @@ void drawHits()
 
 			hist->Fill(cellx, celly, energy);
 		}
+	
+		hist->Draw(drawOption.c_str());
+
+		c1->Update();
+		c1->Draw();
+		c1->Update();
+
+		std::cout << "evt: " << evt << ", hit #: " << hitSize << ", press q to quit, any other key to continue..."  << std::endl;
+
+		char c = getchar();
+		
+		if(c == 'q')
+			break;
+		else
+			hist->Reset();
 	}
 		
-	hist->Draw("lego");
-	//hist->Draw("colz");
 }
