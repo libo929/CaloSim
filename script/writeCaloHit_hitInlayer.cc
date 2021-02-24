@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   
   std::string inputFileName(argv[1]);
 
-  std::string outputFileName("caloHits.root");
+  std::string outputFileName("caloHitsInLayer.root");
 
   if(argc==3) outputFileName = argv[2];
   
