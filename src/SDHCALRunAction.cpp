@@ -50,7 +50,7 @@ SDHCALRunAction::~SDHCALRunAction()
 		G4cout << "Delete Global Writer" << G4endl;
 	}
 
-	G4UserRunAction::~G4UserRunAction();
+	//G4UserRunAction::~G4UserRunAction();
 }
 
 void SDHCALRunAction::BeginOfRunAction(const G4Run*)
