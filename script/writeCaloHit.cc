@@ -35,8 +35,6 @@ int main(int argc, char* argv[]) {
   int maxEvt = 10000;  // change as needed
   int skipEvent = 0; 
 
-  //if(argc == 4) maxEvt = atoi(argv[3]);
-
   TFile* file = new TFile(outputFileName.c_str(), "RECREATE");    
 
   const char* tupleNames = "event:cellX:cellY:layer:energy";
@@ -90,13 +88,9 @@ int main(int argc, char* argv[]) {
   //----------- the event loop -----------
   while( (evt = lcReader->readNextEvent()) != 0  && nEvents < maxEvt) 
   {
-    //    UTIL::LCTOOLS::dumpEvent( evt ) ;
-	//
 	++nEvents;
 
-	//const std::vector< std::string >* strVec = evt->getCollectionNames() ;
 	int event = evt->getEventNumber();
-	//if(event>=maxEvt) break;
 
 	std::cout << "Event : " << event << std::endl;
 	
@@ -120,7 +114,6 @@ int main(int argc, char* argv[]) {
   
 	UTIL::CellIDDecoder<EVENT::SimCalorimeterHit> decoder(col);
 
-	//std::cout << "Hit #: " << nItem << std::endl;
 	float eventEnergy = 0.;
 
 	evtIndex = event;
@@ -133,14 +126,11 @@ int main(int argc, char* argv[]) {
 
 	  float hitEnergy = pSimHit->getEnergy();
 	  if(hitEnergy < 0.00015/2) continue;
-	  //if(hitEnergy < 0.009) continue;
-	  //if(hitEnergy < 0.012) continue;
 
 	  int cellX = decoder(pSimHit)["I"];
 	  int cellY = decoder(pSimHit)["J"];
 	  int layer = decoder(pSimHit)["K-1"];
 
-	  //if(layer>2) continue;
 
 	  cellVecX.push_back(cellX);
 	  cellVecY.push_back(cellY);
@@ -157,7 +147,6 @@ int main(int argc, char* argv[]) {
 	  ++hitSize;
 
 	  //std::cout << "hit energy: " << hitEnergy << ", " << cellX << ", " << cellY << ", " << layer << std::endl;
-	  //tuple->Fill(event, cellX, cellY, layer, hitEnergy);
     }
 
 	tuple->Fill(event, 0, 0, 0, eventEnergy);
