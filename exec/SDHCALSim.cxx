@@ -30,6 +30,7 @@ struct Params
 		G4String physicsList = "FTFP_BERT" ;
 		G4String outputFileName = "output" ;
 		G4bool killNeutrons = false ;
+		G4int runID = 0 ;
 } ;
 
 Params readJsonFile(G4String jsonFileName)
@@ -55,6 +56,8 @@ Params readJsonFile(G4String jsonFileName)
 		params.seed = json.at("seed").get<G4int>() ;
 	if ( json.count("killNeutrons") )
 		params.killNeutrons = json.at("killNeutrons").get<G4bool>() ;
+	if ( json.count("runID") )
+		params.runID= json.at("runID").get<G4int>() ;
 
 	return params ;
 }
@@ -74,6 +77,8 @@ int main(int argc , char** argv)
 	CLHEP::HepRandom::setTheSeed(params.seed) ;
 
 	G4RunManager* runManager = new G4RunManager ;
+
+	runManager->SetRunIDCounter(params.runID);
 
 	// Detector construction
 	runManager->SetUserInitialization( new SDHCALDetectorConstruction(jsonFileName) ) ;

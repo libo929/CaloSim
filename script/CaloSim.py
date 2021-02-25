@@ -43,6 +43,7 @@ class Params :
 		self.oldConfig = False
 		self.outputFileName = "output"
 		self.killNeutrons = False
+                self.runID = 0
 
 
 
@@ -61,7 +62,6 @@ def particleConfig(particle) :
 			}'''
 
 def runSingleJob(cmd):
-        #print cmd
 	os.system(cmd)
 
 def launch(a, nThread = 1, useDefaultSeed = True) :
@@ -78,6 +78,8 @@ def launch(a, nThread = 1, useDefaultSeed = True) :
             a.seed = i * 10 + 20210224
             outputFileName = a.outputFileName + '_' + str(i)
 
+            a.runID = i
+
 	    killNeutronsBool = "false"
 	    if a.killNeutrons :
 	    	killNeutronsBool = "true"	
@@ -89,6 +91,7 @@ def launch(a, nThread = 1, useDefaultSeed = True) :
 	    	"nEvents" : '''+ str(a.nEvent) +''',
 	    	"seed" : '''+ str(a.seed) +''',
 	    	"killNeutrons" : ''' + killNeutronsBool + ''',
+	    	"runID" : ''' + str(a.runID) + ''',
 	    	
 	    	"detectorConfig" :
 	    	{
@@ -119,11 +122,20 @@ def launch(a, nThread = 1, useDefaultSeed = True) :
 	    simuExe = os.environ["SIMEXE"]
 	    logFileName = outputFileName + '.log'
 
+	    cmd = simuExe + ' ' + jsonFileName + ' > ' + logFileName + ' 2>&1'
 
-	    cmd = simuExe + ' ' + jsonFileName + ' > ' + logFileName + ' 2>&1 &'
+            if nThread > 1:
+                cmd = cmd + ' &'
+
             proc = Process(target=runSingleJob, args=(cmd,))
             proc.start()
             procList.append(proc)
+
+
+        sleepTime = 5
+        
+        if nThread <= 1:
+            sleepTime = 0.5
 
         while True:
             jobsFinished = True
@@ -133,7 +145,7 @@ def launch(a, nThread = 1, useDefaultSeed = True) :
                     jobsFinished = False
                     break
 
-            time.sleep(3)
+            time.sleep(sleepTime)
 
             if jobsFinished:
                 break

@@ -7,7 +7,7 @@ import getopt
 
 import CaloSim as sim
 
-particle = 'gamma'   # partile type 
+particle = 'pi0'   # partile type 
 #particle = 'neutron'   # partile type 
 energy   = 20      # GeV
 useUI    = False   # use User Interface
@@ -25,11 +25,14 @@ if __name__ == '__main__' :
 
         params = sim.Params()
         params.physicsList = 'QGSP_BERT'
-        params.nEvent = 20
+        params.nEvent = 10
         params.seed = 1
+
+        nThreads = 10
 
         if useUI:
             params.outputFileName = 'CaloSimUI_' + particle + '_' + str(energy) + 'GeV'
+            nThreads = 1
         else:
             params.outputFileName = 'CaloSim_' + particle + '_' + str(energy) + 'GeV'
 
@@ -52,4 +55,4 @@ if __name__ == '__main__' :
 
         params.particleList.append(part)
 
-        sim.launch( params, 8)
+        sim.launch(params, nThreads)
