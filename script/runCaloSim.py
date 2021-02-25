@@ -16,10 +16,7 @@ if __name__ == '__main__' :
 
         exeDir = sys.path[0]
 
-        #if useUI:
-        exeDir = os.path.join(exeDir, '../bin/CaloSimUI')
-        #else:
-        #    exeDir = os.path.join(exeDir, '../bin/CaloSim')
+        exeDir = os.path.join(exeDir, '../bin/CaloSim')
 
         os.environ["SIMEXE"] = exeDir
 

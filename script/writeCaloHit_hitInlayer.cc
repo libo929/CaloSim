@@ -57,15 +57,13 @@ int main(int argc, char* argv[]) {
   //----------- the event loop -----------
   while( (evt = lcReader->readNextEvent()) != 0  && nEvents < maxEvt) 
   {
-    //    UTIL::LCTOOLS::dumpEvent( evt ) ;
-	//
 	++nEvents;
 
-	//const std::vector< std::string >* strVec = evt->getCollectionNames() ;
+	int run = evt->getRunNumber();
 	int event = evt->getEventNumber();
-	//if(event>=maxEvt) break;
 
-	std::cout << "Event : " << event << std::endl;
+
+	std::cout << "Run: " << run << ", Event: " << event << std::endl;
 	
 	const std::string colName("SDHCAL_Proto_EndCap");
 
