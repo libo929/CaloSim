@@ -16,16 +16,16 @@ if __name__ == '__main__' :
 
         exeDir = sys.path[0]
 
-        if useUI:
-            exeDir = os.path.join(exeDir, '../bin/CaloSimUI')
-        else:
-            exeDir = os.path.join(exeDir, '../bin/CaloSim')
+        #if useUI:
+        exeDir = os.path.join(exeDir, '../bin/CaloSimUI')
+        #else:
+        #    exeDir = os.path.join(exeDir, '../bin/CaloSim')
 
         os.environ["SIMEXE"] = exeDir
 
         params = sim.Params()
         params.physicsList = 'QGSP_BERT'
-        params.nEvent = 10
+        params.nEvent = 1000
         params.seed = 1
 
         nThreads = 10

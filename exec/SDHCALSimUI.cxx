@@ -28,11 +28,12 @@
 
 struct Params
 {
-		G4int seed = 1 ;
+		G4int seed = 0 ;
 		G4int nEvent = 1 ;
 		G4String physicsList = "FTFP_BERT" ;
 		G4String outputFileName = "output" ;
 		G4bool killNeutrons = false ;
+		G4int runID = -1 ;
 } ;
 
 Params readJsonFile(G4String jsonFileName)
@@ -58,6 +59,8 @@ Params readJsonFile(G4String jsonFileName)
 		params.seed = json.at("seed").get<G4int>() ;
 	if ( json.count("killNeutrons") )
 		params.killNeutrons = json.at("killNeutrons").get<G4bool>() ;
+	if ( json.count("runID") )
+		params.runID= json.at("runID").get<G4int>() ;
 
 	return params ;
 }
@@ -73,11 +76,19 @@ int main(int argc , char** argv)
 	G4String jsonFileName = argv[1] ;
 
 	Params params = readJsonFile( jsonFileName ) ;
-	//Params params;
 
 	CLHEP::HepRandom::setTheSeed(params.seed) ;
 
 	G4RunManager* runManager = new G4RunManager ;
+
+	bool useUI = false ;
+
+	if(params.runID < 0) useUI = true ;
+
+        if(!useUI)
+        { 
+        	runManager->SetRunIDCounter(params.runID);
+        }
 
 	// Detector construction
 	runManager->SetUserInitialization( new SDHCALDetectorConstruction(jsonFileName) ) ;
@@ -89,11 +100,23 @@ int main(int argc , char** argv)
 	// Primary generator action
 	runManager->SetUserAction( new SDHCALPrimaryGeneratorAction( jsonFileName ) ) ;
 
-	SDHCALRunAction::setCreateGlobleWriter();
-	SDHCALRunAction* runAction = new SDHCALRunAction(params.outputFileName) ;
+	SDHCALRunAction* runAction = nullptr ;
 
-	//runAction->setLcioFileName( params.outputFileName + G4String(".slcio") ) ;
-	//runAction->setRootFileName( params.outputFileName + G4String(".root") ) ;
+        if(useUI)
+	{
+		SDHCALRunAction::setCreateGlobleWriter();
+		runAction = new SDHCALRunAction(params.outputFileName) ;
+	}
+	else
+	{
+		runAction = new SDHCALRunAction() ;
+	}
+
+        if(!useUI)
+	{
+		runAction->setLcioFileName( params.outputFileName + G4String(".slcio") ) ;
+		runAction->setRootFileName( params.outputFileName + G4String(".root") ) ;
+	}
 
 	runManager->SetUserAction( runAction ) ;
 	runManager->SetUserAction( new SDHCALEventAction(runAction) ) ;
@@ -106,23 +129,31 @@ int main(int argc , char** argv)
 
 	runManager->Initialize() ;
 
-	G4VisManager* visManager = new G4VisExecutive("Quiet");
-	visManager->Initialize();
+       if(useUI)
+       {
+		G4VisManager* visManager = new G4VisExecutive("Quiet");
+		visManager->Initialize();
 
-	G4UIExecutive* ui = new G4UIExecutive(argc, argv);
+		G4UIExecutive* ui = new G4UIExecutive(argc, argv);
 
-	G4UImanager::GetUIpointer()->ApplyCommand("/control/macroPath ./");
-	G4UImanager::GetUIpointer()->ApplyCommand("/control/execute init_vis.mac");
+		G4UImanager::GetUIpointer()->ApplyCommand("/control/macroPath ./");
+		G4UImanager::GetUIpointer()->ApplyCommand("/control/execute init_vis.mac");
 
-	if (ui->IsGUI()) {
-		G4UImanager::GetUIpointer()->ApplyCommand("/control/execute gui.mac");
+		if (ui->IsGUI()) {
+			G4UImanager::GetUIpointer()->ApplyCommand("/control/execute gui.mac");
+		}
+
+		ui->SessionStart();
+
+		delete ui;
+		delete visManager;
+	}
+	else
+	{
+		runManager->BeamOn(params.nEvent) ;
 	}
 
-	ui->SessionStart();
-
-	delete ui;
-	delete visManager;
-	delete runManager;
+	delete runManager ;
 
 	return 0 ;
 }

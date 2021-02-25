@@ -79,6 +79,9 @@ def launch(a, nThread = 1, useDefaultSeed = True) :
             outputFileName = a.outputFileName + '_' + str(i)
 
             a.runID = i
+            
+            if nThread <= 1:
+                a.runID = -1
 
 	    killNeutronsBool = "false"
 	    if a.killNeutrons :
@@ -124,8 +127,6 @@ def launch(a, nThread = 1, useDefaultSeed = True) :
 
 	    cmd = simuExe + ' ' + jsonFileName + ' > ' + logFileName + ' 2>&1'
 
-            if nThread > 1:
-                cmd = cmd + ' &'
 
             proc = Process(target=runSingleJob, args=(cmd,))
             proc.start()
