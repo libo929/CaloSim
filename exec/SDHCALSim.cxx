@@ -10,6 +10,9 @@
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 
+#include "G4VisExecutive.hh"
+#include "G4UIExecutive.hh"
+
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
 #endif
@@ -30,7 +33,7 @@ struct Params
 		G4String physicsList = "FTFP_BERT" ;
 		G4String outputFileName = "output" ;
 		G4bool killNeutrons = false ;
-		G4int runID = 0 ;
+		G4int runID = -1 ;
 } ;
 
 Params readJsonFile(G4String jsonFileName)
@@ -78,7 +81,14 @@ int main(int argc , char** argv)
 
 	G4RunManager* runManager = new G4RunManager ;
 
-	runManager->SetRunIDCounter(params.runID);
+	bool useUI = false ;
+
+	if(params.runID < 0) useUI = true ;
+
+        if(!useUI)
+        { 
+        	runManager->SetRunIDCounter(params.runID);
+        }
 
 	// Detector construction
 	runManager->SetUserInitialization( new SDHCALDetectorConstruction(jsonFileName) ) ;
@@ -90,10 +100,23 @@ int main(int argc , char** argv)
 	// Primary generator action
 	runManager->SetUserAction( new SDHCALPrimaryGeneratorAction( jsonFileName ) ) ;
 
-	SDHCALRunAction* runAction = new SDHCALRunAction() ;
+	SDHCALRunAction* runAction = nullptr ;
 
-	runAction->setLcioFileName( params.outputFileName + G4String(".slcio") ) ;
-	runAction->setRootFileName( params.outputFileName + G4String(".root") ) ;
+        if(useUI)
+	{
+		SDHCALRunAction::setCreateGlobleWriter();
+		runAction = new SDHCALRunAction(params.outputFileName) ;
+	}
+	else
+	{
+		runAction = new SDHCALRunAction() ;
+	}
+
+        if(!useUI)
+	{
+		runAction->setLcioFileName( params.outputFileName + G4String(".slcio") ) ;
+		runAction->setRootFileName( params.outputFileName + G4String(".root") ) ;
+	}
 
 	runManager->SetUserAction( runAction ) ;
 	runManager->SetUserAction( new SDHCALEventAction(runAction) ) ;
@@ -105,7 +128,30 @@ int main(int argc , char** argv)
 	SDHCALStackingAction::Instance()->setKillNeutrons(params.killNeutrons) ;
 
 	runManager->Initialize() ;
-	runManager->BeamOn(params.nEvent) ;
+
+       if(useUI)
+       {
+		G4VisManager* visManager = new G4VisExecutive("Quiet");
+		visManager->Initialize();
+
+		G4UIExecutive* ui = new G4UIExecutive(argc, argv);
+
+		G4UImanager::GetUIpointer()->ApplyCommand("/control/macroPath ./");
+		G4UImanager::GetUIpointer()->ApplyCommand("/control/execute init_vis.mac");
+
+		if (ui->IsGUI()) {
+			G4UImanager::GetUIpointer()->ApplyCommand("/control/execute gui.mac");
+		}
+
+		ui->SessionStart();
+
+		delete ui;
+		delete visManager;
+	}
+	else
+	{
+		runManager->BeamOn(params.nEvent) ;
+	}
 
 	delete runManager ;
 
