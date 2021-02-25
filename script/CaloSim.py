@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 import os
+import time
+
+from multiprocessing import Process
 
 class Particle :
 	def __init__(self) :
@@ -57,55 +60,83 @@ def particleConfig(particle) :
 				"momentum" : { "option" : "''' + particle.momentumOption + '''" , "direction" : {"phi": ''' + str(particle.momentumPhi) + ''', "theta" : ''' + str(particle.momentumTheta) + '''} , "sigma" : ''' + str(particle.sigmaMomentum) + ''' }
 			}'''
 
-def launch(a) :
+def runSingleJob(cmd):
+        #print cmd
+	os.system(cmd)
 
-	pid = os.getpid()
-	jsonFileName = str(pid) + '.json'
-	
-	oldConfigBool = "false"
-	if a.oldConfig :
-		oldConfigBool = "true"
+def launch(a, nThread = 1, useDefaultSeed = True) :
 
-	killNeutronsBool = "false"
-	if a.killNeutrons :
-		killNeutronsBool = "true"	
+        procList = []
 
-	jsonFileContent = '''
-	{
-		"outputFileName" : "'''+ a.outputFileName +'''",
-		"physicsList" : "'''+ a.physicsList +'''",
-		"nEvents" : '''+ str(a.nEvent) +''',
-		"seed" : '''+ str(a.seed) +''',
-		"killNeutrons" : ''' + killNeutronsBool + ''',
-		
-		"detectorConfig" :
-		{
-			"rpcType" : "'''+ a.rpcType +'''",
-			"oldConfig" : ''' + oldConfigBool + '''
-		},
+        for i in range(0, nThread):
+	    jsonFileName = 'tmpRunFile' + str(i) + '.json'
+	    
+	    oldConfigBool = "false"
+	    if a.oldConfig :
+	    	oldConfigBool = "true"
 
-		"particuleGuns" :
-		['''
+            a.seed = i * 10 + 20210224
+            outputFileName = a.outputFileName + '_' + str(i)
 
+	    killNeutronsBool = "false"
+	    if a.killNeutrons :
+	    	killNeutronsBool = "true"	
 
-	for particle in a.particleList[:-1] :
-		jsonFileContent = jsonFileContent + particleConfig(particle) + ','
+	    jsonFileContent = '''
+	    {
+	    	"outputFileName" : "'''+ outputFileName +'''",
+	    	"physicsList" : "'''+ a.physicsList +'''",
+	    	"nEvents" : '''+ str(a.nEvent) +''',
+	    	"seed" : '''+ str(a.seed) +''',
+	    	"killNeutrons" : ''' + killNeutronsBool + ''',
+	    	
+	    	"detectorConfig" :
+	    	{
+	    		"rpcType" : "'''+ a.rpcType +'''",
+	    		"oldConfig" : ''' + oldConfigBool + '''
+	    	},
 
-	jsonFileContent = jsonFileContent + particleConfig(a.particleList[-1])
-
-
-	jsonFileContent = jsonFileContent + '''
-		]
-	}'''
+	    	"particuleGuns" :
+	    	['''
 
 
-	jsonFile = open(jsonFileName , 'w')
-	jsonFile.write(jsonFileContent)
-	jsonFile.close()
+	    for particle in a.particleList[:-1] :
+	    	jsonFileContent = jsonFileContent + particleConfig(particle) + ','
+
+	    jsonFileContent = jsonFileContent + particleConfig(a.particleList[-1])
 
 
-	simuExe = os.environ["SIMEXE"]
+	    jsonFileContent = jsonFileContent + '''
+	    	]
+	    }'''
 
-	os.system(simuExe + ' ' + jsonFileName)
 
-	os.system('rm ' + jsonFileName)
+	    jsonFile = open(jsonFileName , 'w')
+	    jsonFile.write(jsonFileContent)
+	    jsonFile.close()
+
+
+	    simuExe = os.environ["SIMEXE"]
+	    logFileName = outputFileName + '.log'
+
+
+	    cmd = simuExe + ' ' + jsonFileName + ' > ' + logFileName + ' 2>&1 &'
+            proc = Process(target=runSingleJob, args=(cmd,))
+            proc.start()
+            procList.append(proc)
+
+        while True:
+            jobsFinished = True
+
+            for p in procList:
+                if p.is_alive():
+                    jobsFinished = False
+                    break
+
+            time.sleep(3)
+
+            if jobsFinished:
+                break
+
+	os.system('rm tmpRunFile*.json')
+        print 'Done' 

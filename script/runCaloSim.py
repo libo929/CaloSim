@@ -7,11 +7,10 @@ import getopt
 
 import CaloSim as sim
 
-particle = 'pi0'   # partile type 
-energy   = 40      # GeV
+particle = 'gamma'   # partile type 
+#particle = 'neutron'   # partile type 
+energy   = 20      # GeV
 useUI    = False   # use User Interface
-#useUI    = True # use User Interface
-
 
 if __name__ == '__main__' :
 
@@ -21,12 +20,13 @@ if __name__ == '__main__' :
             exeDir = os.path.join(exeDir, '../bin/CaloSimUI')
         else:
             exeDir = os.path.join(exeDir, '../bin/CaloSim')
-	os.environ["SIMEXE"] = exeDir
 
-	params = sim.Params()
-	params.physicsList = 'QGSP_BERT'
-	params.nEvent = 1
-	params.seed = 1
+        os.environ["SIMEXE"] = exeDir
+
+        params = sim.Params()
+        params.physicsList = 'QGSP_BERT'
+        params.nEvent = 20
+        params.seed = 1
 
         if useUI:
             params.outputFileName = 'CaloSimUI_' + particle + '_' + str(energy) + 'GeV'
@@ -34,23 +34,22 @@ if __name__ == '__main__' :
             params.outputFileName = 'CaloSim_' + particle + '_' + str(energy) + 'GeV'
 
 	
-	params.oldConfig = False
-	params.killNeutrons = False
+        params.oldConfig = False
+        params.killNeutrons = False
 
 
-	part = sim.Particle()
-	part.particleName = particle
-	part.energy = energy
+        part = sim.Particle()
+        part.particleName = particle
+        part.energy = energy
 
 
-	part.momentumOption = 'gaus'
-	part.sigmaMomentum = 0.
+        part.momentumOption = 'gaus'
+        part.sigmaMomentum = 0.
 
-	part.positionOption = 'gaus'
-	part.positionZ = -1800           # mm
-	part.sigmaPos = 0
+        part.positionOption = 'gaus'
+        part.positionZ = -1800           # mm
+        part.sigmaPos = 0
 
+        params.particleList.append(part)
 
-	params.particleList.append(part)
-
-	sim.launch( params )
+        sim.launch( params, 8)
