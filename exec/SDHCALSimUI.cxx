@@ -55,7 +55,7 @@ Params readJsonFile(G4String jsonFileName)
 	if ( json.count("nEvents") )
 		params.nEvent = json.at("nEvents").get<G4int>() ;
 	if ( json.count("seed") )
-		params.seed = json.at("seed").get<G4int>()  + 1 ;
+		params.seed = json.at("seed").get<G4int>() ;
 	if ( json.count("killNeutrons") )
 		params.killNeutrons = json.at("killNeutrons").get<G4bool>() ;
 
