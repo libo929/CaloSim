@@ -25,6 +25,8 @@
 #include <G4RegionStore.hh>
 #include <G4Region.hh>
 
+#include <G4VisAttributes.hh>
+
 #include "SDHCALRPCSensitiveDetector.h"
 
 std::set<SDHCALRPC*> SDHCALRPC::allTheRPC ;
@@ -167,6 +169,19 @@ void SDHCALRPC::build(const SDHCALRPCGeom& _geom)
 		//create logic layer volume (indefined placement)
 		auto solid = new G4Box(layer.name , sizeX/2 , sizeY/2 , layer.width*mm/2) ;
 		auto logic = new G4LogicalVolume(solid , material , layer.name) ;
+
+		G4VisAttributes * visAtt = new G4VisAttributes();
+
+		if(layer.name == "Si")
+			visAtt->SetColour(G4Colour(G4Colour(1.0, 1.0, 0.4, 0.2)));
+		else
+			visAtt->SetColour(G4Colour(G4Colour(0.4, 0.8, 1.0, 0.2)));
+
+        visAtt->SetForceSolid(true);
+        visAtt->SetVisibility(true); 
+
+
+		logic->SetVisAttributes(visAtt);
 
 		zPos += layer.width*mm/2 ; //we are now at center of the current layer (where it has to be placed)
 
