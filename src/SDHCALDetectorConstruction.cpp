@@ -10,6 +10,7 @@
 
 #include <G4Region.hh>
 #include <G4RegionStore.hh>
+#include <G4VisAttributes.hh>
 
 #include "json.hpp"
 
@@ -58,9 +59,10 @@ SDHCALDetectorConstruction::SDHCALDetectorConstruction(G4String jsonFileName)
 G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 {
 	G4int nLayers = 30 ; // 30
-	G4int nPadX = 384*2 ;
-	G4int nPadY = 312*2 ;
-	G4double padSize = 10.1/2.*CLHEP::mm ;
+	G4int nPadX = 400 ;
+	G4int nPadY = 400 ;
+	//G4double padSize = 10.1/2.*CLHEP::mm ;
+	G4double padSize = 10.*CLHEP::mm ;
 
 	G4double caloSizeX = nPadX*padSize ;
 	G4double caloSizeY = nPadY*padSize ;
@@ -85,6 +87,10 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 	G4VPhysicalVolume* physiWorld = new G4PVPlacement(nullptr , G4ThreeVector() ,  logicWorld , "World" , nullptr , false , 0 , true) ;
 
 	std::vector<SDHCALRPC*> rpcVec ;
+	std::vector<G4double> absorberStructureSizeZVec ;
+
+	G4double totalAbsorberStructureSizeZ = 0.;
+
 	for ( G4int i = 0 ; i < nLayers ; ++i )
 	{
 		if ( rpcType == kNormalRPC )
@@ -96,18 +102,33 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 		}
 		else if ( rpcType == kWithScintillatorRPC )
 			rpcVec.push_back( SDHCALRPC::buildWithScintillatorRPC(i , nPadX , nPadY , padSize) ) ;
+
+		const G4double tungRadlen = 3.5;
+
+		if(i < 10)
+		{
+			absorberStructureSizeZVec.push_back(0.6 * tungRadlen); // radiation length
+			totalAbsorberStructureSizeZ += 0.6 * tungRadlen;
+		}
+		else if(i < 20)
+		{
+			absorberStructureSizeZVec.push_back(0.6 * tungRadlen);
+			totalAbsorberStructureSizeZ += 0.6 * tungRadlen;
+		}
+		else
+		{
+			absorberStructureSizeZVec.push_back(1.2 * tungRadlen); 
+			totalAbsorberStructureSizeZ += 1.2 * tungRadlen;
+		}
 	}
 
 	G4double RPCSizeZ = rpcVec.at(0)->getSizeZ() ;
-
-	//G4double absorberStructureSizeZ = 2.1*CLHEP::mm ;
-	G4double absorberStructureSizeZ = .0*CLHEP::mm ;
 
 	G4double airGapSizeZ = 0.001*CLHEP::mm ;
 	if ( oldConfig ) //to reproduce old results
 		airGapSizeZ = 0*CLHEP::mm ;
 
-	G4double caloSizeZ = nLayers*( absorberStructureSizeZ + 2*airGapSizeZ + RPCSizeZ ) ;
+	G4double caloSizeZ = totalAbsorberStructureSizeZ + nLayers*( 2*airGapSizeZ + RPCSizeZ ) ;
 
 	sizeX = caloSizeX ;
 	sizeZ = caloSizeZ ;
@@ -119,10 +140,20 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 	G4double currentPos = -caloSizeZ/2 ;
 	for ( unsigned int i = 0 ; i < static_cast<unsigned int>( nLayers ) ; ++i )
 	{
+		G4double absorberStructureSizeZ = absorberStructureSizeZVec.at(i);
+
 		currentPos += absorberStructureSizeZ/2 ;
-		//G4Box* solidAbsorberStructure = new G4Box("AbsorberStructure" , caloSizeX/2 , caloSizeY/2 , absorberStructureSizeZ/2) ;
-		//G4LogicalVolume* logicAbsorberStructure = new G4LogicalVolume(solidAbsorberStructure , absorberMaterial , "AbsorberStructure") ;
-		//new G4PVPlacement(nullptr , G4ThreeVector(0,0,currentPos) , logicAbsorberStructure , "AbsorberStructure" , logicCalorimeter , false , 0 , true) ;
+		G4Box* solidAbsorberStructure = new G4Box("AbsorberStructure" , caloSizeX/2 , caloSizeY/2 , absorberStructureSizeZ/2) ;
+		G4LogicalVolume* logicAbsorberStructure = new G4LogicalVolume(solidAbsorberStructure , absorberMaterial , "AbsorberStructure") ;
+
+		G4VisAttributes * visAtt = new G4VisAttributes();
+		visAtt->SetColour(G4Colour(G4Colour(0.4, 0.8, 1.0, 0.2)));
+        visAtt->SetForceSolid(true);
+        visAtt->SetVisibility(true); 
+
+		logicAbsorberStructure->SetVisAttributes(visAtt);
+
+		new G4PVPlacement(nullptr , G4ThreeVector(0,0,currentPos) , logicAbsorberStructure , "AbsorberStructure" , logicCalorimeter , false , 0 , true) ;
 
 		currentPos += absorberStructureSizeZ/2 + airGapSizeZ + RPCSizeZ/2 ;
 

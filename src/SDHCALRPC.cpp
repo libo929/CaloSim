@@ -50,7 +50,7 @@ SDHCALRPC* SDHCALRPC::buildStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY ,
 	//geom.layers.push_back( {"GraphiteCathode"       , 0.050 , "G4_GRAPHITE"      } ) ;	
 	//geom.layers.push_back( {"MylarCathode"          , 0.180 , "G4_MYLAR"         } ) ;
 	//geom.layers.push_back( {"BackCassetteAbsorber"  , 2.500 , "SDHCAL_Steel316L" } ) ;
-	geom.layers.push_back( {"W"  ,  4.2,   "G4_W" } ) ;
+	//geom.layers.push_back( {"W"  ,  4.2,   "G4_W" } ) ;
 	geom.layers.push_back( {"Si"  , 0.525, "G4_Si" } ) ;
 	//geom.layers.push_back( {"Si"  , 0.525, "G4_Si" } ) ;
 
@@ -179,7 +179,6 @@ void SDHCALRPC::build(const SDHCALRPCGeom& _geom)
 
         visAtt->SetForceSolid(true);
         visAtt->SetVisibility(true); 
-
 
 		logic->SetVisAttributes(visAtt);
 
