@@ -125,7 +125,6 @@ int main(int argc, char* argv[]) {
 	  if(pSimHit == NULL) continue;
 
 	  float hitEnergy = pSimHit->getEnergy();
-	  if(hitEnergy < 0.0001) continue;
 
 	  int cellX = decoder(pSimHit)["I"];
 	  int cellY = decoder(pSimHit)["J"];
