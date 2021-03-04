@@ -1,7 +1,7 @@
 import RunCaloSim as rcs
 
-particle = 'mu-'
-energy = 10
+particle = 'gamma'
+energy = 50
 
 useUI = True
 nThreads = 1

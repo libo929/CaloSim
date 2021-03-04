@@ -87,7 +87,13 @@
 # Select trajectories with 2.5 MeV <= IMag< 1000 MeV
 /vis/filtering/trajectories/create/attributeFilter
 /vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
-/vis/filtering/trajectories/attributeFilter-0/addInterval 10 MeV 60000 MeV
+/vis/filtering/trajectories/attributeFilter-0/addInterval 100 MeV 1000 GeV
+
+/vis/filtering/trajectories/create/chargeFilter
+/vis/filtering/trajectories/chargeFilter-0/add +1
+/vis/filtering/trajectories/chargeFilter-0/add -1
+/vis/filtering/trajectories/chargeFilter-0/add 0
+
 
 #/vis/filtering/trajectories/create/attributeFilter
 #/vis/filtering/trajectories/attributeFilter-1/setAttribute IMag
