@@ -61,8 +61,7 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::Construct()
 	G4int nLayers = 30 ; // 30
 	G4int nPadX = 400 ;
 	G4int nPadY = 400 ;
-	//G4double padSize = 10.1/2.*CLHEP::mm ;
-	G4double padSize = 10.*CLHEP::mm ;
+	G4double padSize = 5.*CLHEP::mm ;
 
 	G4double caloSizeX = nPadX*padSize ;
 	G4double caloSizeY = nPadY*padSize ;
