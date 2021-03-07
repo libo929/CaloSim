@@ -135,9 +135,18 @@ int main(int argc, char* argv[]) {
 	  cellVecY.push_back(cellY);
 	  cellVecZ.push_back(layer);
 
-	  posVecX.push_back( (cellX - 384) * 10.1/2.);
-	  posVecY.push_back( (cellY - 312) * 10.1/2.);
-	  posVecZ.push_back(layer * 4.725 + 1800.);
+
+	  // make a shift of the detector
+	  const float detShift = 1800.;
+	  const float layerThicknell1 = 2.1 + 0.525;
+	  //const float layerThicknell2 = 4.2 + 0.525;
+	  float layerPos = layer * layerThicknell1 + detShift;
+
+	  if(layer > 19) layerPos += 2.1 * (layer - 19);
+
+	  posVecX.push_back( (cellX - 200) * 5. );
+	  posVecY.push_back( (cellY - 200) * 5. );
+	  posVecZ.push_back( layerPos           );
 
 	  energyVec.push_back(hitEnergy);
 
