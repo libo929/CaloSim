@@ -38,7 +38,7 @@ void drawHits()
     TCanvas* c1 = new TCanvas("c1","Hits",10, 10, 600, 600);
 
 	//TH2F* hist = new TH2F("hitsHist", "calo hits", 100, 350, 450, 100, 250, 350);
-	TH2F* hist = new TH2F("hitsHist", "calo hits", 30, 370, 400, 30, 300, 330);
+	TH2F* hist = new TH2F("hitsHist", "calo hits", 60, 170, 230, 60, 170, 230);
 
 	int maxEvt = 10000;
 
