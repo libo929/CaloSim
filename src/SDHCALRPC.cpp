@@ -31,6 +31,19 @@
 
 std::set<SDHCALRPC*> SDHCALRPC::allTheRPC ;
 
+SDHCALRPC* SDHCALRPC::buildSilicon(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize)
+{
+	SDHCALRPCGeom geom ;
+	geom.nPadX = _nPadX ;
+	geom.nPadY = _nPadY ;
+	geom.cellSize = _cellSize ;
+
+	geom.layers = {} ;
+	geom.layers.push_back( {"Si"  , 0.525, "G4_Si" } ) ;
+
+	return new SDHCALRPC(_id , geom) ;
+}
+
 SDHCALRPC* SDHCALRPC::buildStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize)
 {
 	SDHCALRPCGeom geom ;
@@ -45,59 +58,11 @@ SDHCALRPC* SDHCALRPC::buildStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY ,
 	//geom.layers.push_back( {"MylarAnode"            , 0.050 , "G4_MYLAR"         } ) ;	
 	//geom.layers.push_back( {"GraphiteAnode"         , 0.050 , "G4_GRAPHITE"      } ) ;	
 	//geom.layers.push_back( {"ThinGlass"             , 0.700 , "G4_Pyrex_Glass"   } ) ;	
-	//geom.layers.push_back( {"GasGap"                , 1.200 , "SDHCAL_RPCGaz"    } ) ; //the layer called GasGap has a special Role
+	geom.layers.push_back( {"GasGap"                , 1.200 , "SDHCAL_RPCGaz"    } ) ; //the layer called GasGap has a special Role
 	//geom.layers.push_back( {"ThickGlass"            , 1.100 , "G4_Pyrex_Glass"   } ) ;
 	//geom.layers.push_back( {"GraphiteCathode"       , 0.050 , "G4_GRAPHITE"      } ) ;	
 	//geom.layers.push_back( {"MylarCathode"          , 0.180 , "G4_MYLAR"         } ) ;
 	//geom.layers.push_back( {"BackCassetteAbsorber"  , 2.500 , "SDHCAL_Steel316L" } ) ;
-	//geom.layers.push_back( {"W"  ,  4.2,   "G4_W" } ) ;
-	geom.layers.push_back( {"Si"  , 0.525, "G4_Si" } ) ;
-	//geom.layers.push_back( {"Si"  , 0.525, "G4_Si" } ) ;
-
-	return new SDHCALRPC(_id , geom) ;
-}
-
-SDHCALRPC* SDHCALRPC::buildOldStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize)
-{
-	SDHCALRPCGeom geom ;
-	geom.nPadX = _nPadX ;
-	geom.nPadY = _nPadY ;
-	geom.cellSize = _cellSize ;
-
-	geom.layers = {} ;
-	geom.layers.push_back( {"FrontCassetteAbsorber" , 2.500 , "SDHCAL_Steel316L_Old" } ) ;
-	geom.layers.push_back( {"Mask"                  , 1.600 , "G4_Galactic"          } ) ;	
-	geom.layers.push_back( {"PCB"                   , 1.200 , "G4_Galactic"          } ) ;	
-	geom.layers.push_back( {"MylarAnode"            , 0.050 , "G4_MYLAR"             } ) ;	
-	geom.layers.push_back( {"GraphiteAnode"         , 0.050 , "G4_GRAPHITE"          } ) ;	
-	geom.layers.push_back( {"ThinGlass"             , 0.700 , "G4_Pyrex_Glass"       } ) ;	
-	geom.layers.push_back( {"GasGap"                , 1.200 , "SDHCAL_RPCGaz"        } ) ; //the layer called GasGap has a special Role
-	geom.layers.push_back( {"ThickGlass"            , 1.100 , "G4_Pyrex_Glass"       } ) ;
-	geom.layers.push_back( {"GraphiteCathode"       , 0.050 , "G4_GRAPHITE"          } ) ;	
-	geom.layers.push_back( {"MylarCathode"          , 0.180 , "G4_MYLAR"             } ) ;
-	geom.layers.push_back( {"BackCassetteAbsorber"  , 2.500 , "SDHCAL_Steel316L_Old" } ) ;
-
-	return new SDHCALRPC(_id , geom) ;
-}
-
-SDHCALRPC* SDHCALRPC::buildWithScintillatorRPC(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize)
-{
-	SDHCALRPCGeom geom ;
-	geom.nPadX = _nPadX ;
-	geom.nPadY = _nPadY ;
-	geom.cellSize = _cellSize ;
-
-	geom.layers = {} ;
-	geom.layers.push_back( {"FrontCassetteAbsorber" , 2.500 , "SDHCAL_Steel316L" } ) ;
-	geom.layers.push_back( {"MylarAnode"            , 0.015 , "G4_MYLAR"         } ) ;	
-	geom.layers.push_back( {"GraphiteAnode"         , 0.050 , "G4_GRAPHITE"      } ) ;	
-	geom.layers.push_back( {"ThinGlass"             , 0.700 , "G4_Pyrex_Glass"   } ) ;	
-	geom.layers.push_back( {"GasGap"                , 1.200 , "SDHCAL_RPCGaz"    } ) ; //the layer called GasGap has a special Role
-	geom.layers.push_back( {"ThickGlass"            , 1.100 , "G4_Pyrex_Glass"   } ) ;
-	geom.layers.push_back( {"GraphiteCathode"       , 0.050 , "G4_GRAPHITE"      } ) ;	
-	geom.layers.push_back( {"MylarCathode"          , 0.015 , "G4_MYLAR"         } ) ;
-	geom.layers.push_back( {"Scintillator"          , 3.000 , "G4_POLYSTYRENE"   } ) ;
-	geom.layers.push_back( {"BackCassetteAbsorber"  , 2.500 , "SDHCAL_Steel316L" } ) ;
 
 	return new SDHCALRPC(_id , geom) ;
 }
@@ -172,7 +137,7 @@ void SDHCALRPC::build(const SDHCALRPCGeom& _geom)
 
 		G4VisAttributes * visAtt = new G4VisAttributes();
 
-		if(layer.name == "Si")
+		if(layer.name == "Si" || layer.name == "GasGap")
 			visAtt->SetColour(G4Colour(G4Colour(1.0, 1.0, 0.4, 0.2)));
 		else
 			visAtt->SetColour(G4Colour(G4Colour(0.4, 0.8, 1.0, 0.2)));
@@ -189,8 +154,7 @@ void SDHCALRPC::build(const SDHCALRPCGeom& _geom)
 
 		zPos += layer.width*mm/2 ; //we are now at the back of the current layer
 
-#if 1
-		if ( layer.name == "Si" ) //we keep trace of the gas gap
+		if ( layer.name == "Si" || layer.name == "GasGap" ) //we keep trace of the gas gap
 		{
 			if ( logicGap ) //we only want one gas gap
 			{
@@ -201,7 +165,6 @@ void SDHCALRPC::build(const SDHCALRPCGeom& _geom)
 			logicGap = logic ;
 			physiGasGap = volume ;			
 		}
-#endif
 	}
 
 	if ( !logicGap ) //if we don't have the gas gap we have a problem

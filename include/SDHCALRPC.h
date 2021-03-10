@@ -36,8 +36,7 @@ class SDHCALRPC
 	public : 
 		// Helper functions to construct pre-defined RPCs
 		static SDHCALRPC* buildStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize) ;
-		static SDHCALRPC* buildOldStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize) ;
-		static SDHCALRPC* buildWithScintillatorRPC(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize) ;
+		static SDHCALRPC* buildSilicon(G4int _id , G4int _nPadX , G4int _nPadY , G4double _cellSize) ;
 
 	public :
 		SDHCALRPC(G4int _id , const SDHCALRPCGeom& _geom) ;
