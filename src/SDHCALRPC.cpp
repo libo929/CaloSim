@@ -52,17 +52,17 @@ SDHCALRPC* SDHCALRPC::buildStandardRPC(G4int _id , G4int _nPadX , G4int _nPadY ,
 	geom.cellSize = _cellSize ;
 
 	geom.layers = {} ;
-	geom.layers.push_back( {"FrontCassetteAbsorber" , 2.500 , "SDHCAL_Steel316L" } ) ;
-	geom.layers.push_back( {"Mask"                  , 1.600 , "SDHCAL_epoxy"     } ) ;	
-	geom.layers.push_back( {"PCB"                   , 1.200 , "SDHCAL_g10"       } ) ;	
-	geom.layers.push_back( {"MylarAnode"            , 0.050 , "G4_MYLAR"         } ) ;	
-	geom.layers.push_back( {"GraphiteAnode"         , 0.050 , "G4_GRAPHITE"      } ) ;	
-	geom.layers.push_back( {"ThinGlass"             , 0.700 , "G4_Pyrex_Glass"   } ) ;	
+	//geom.layers.push_back( {"FrontCassetteAbsorber" , 2.500 , "SDHCAL_Steel316L" } ) ;
+	//geom.layers.push_back( {"Mask"                  , 1.600 , "SDHCAL_epoxy"     } ) ;	
+	//geom.layers.push_back( {"PCB"                   , 1.200 , "SDHCAL_g10"       } ) ;	
+	//geom.layers.push_back( {"MylarAnode"            , 0.050 , "G4_MYLAR"         } ) ;	
+	//geom.layers.push_back( {"GraphiteAnode"         , 0.050 , "G4_GRAPHITE"      } ) ;	
+	//geom.layers.push_back( {"ThinGlass"             , 0.700 , "G4_Pyrex_Glass"   } ) ;	
 	geom.layers.push_back( {"GasGap"                , 1.200 , "SDHCAL_RPCGaz"    } ) ; //the layer called GasGap has a special Role
-	geom.layers.push_back( {"ThickGlass"            , 1.100 , "G4_Pyrex_Glass"   } ) ;
-	geom.layers.push_back( {"GraphiteCathode"       , 0.050 , "G4_GRAPHITE"      } ) ;	
-	geom.layers.push_back( {"MylarCathode"          , 0.180 , "G4_MYLAR"         } ) ;
-	geom.layers.push_back( {"BackCassetteAbsorber"  , 2.500 , "SDHCAL_Steel316L" } ) ;
+	//geom.layers.push_back( {"ThickGlass"            , 1.100 , "G4_Pyrex_Glass"   } ) ;
+	//geom.layers.push_back( {"GraphiteCathode"       , 0.050 , "G4_GRAPHITE"      } ) ;	
+	//geom.layers.push_back( {"MylarCathode"          , 0.180 , "G4_MYLAR"         } ) ;
+	//geom.layers.push_back( {"BackCassetteAbsorber"  , 2.500 , "SDHCAL_Steel316L" } ) ;
 
 	return new SDHCALRPC(_id , geom) ;
 }

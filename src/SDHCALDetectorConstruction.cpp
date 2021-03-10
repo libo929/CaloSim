@@ -204,8 +204,8 @@ G4VPhysicalVolume* SDHCALDetectorConstruction::ConstructHCAL()
 	    rpcVec.push_back( SDHCALRPC::buildStandardRPC(i , nPadX , nPadY , padSize) ) ;		
 
 		// mm
-		absorberStructureSizeZVec.push_back(15.);
-		totalAbsorberStructureSizeZ += 15.;
+		absorberStructureSizeZVec.push_back(20.);
+		totalAbsorberStructureSizeZ += 20.;
 	}
 
 	G4double RPCSizeZ = rpcVec.at(0)->getSizeZ() ;
