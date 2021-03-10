@@ -25,6 +25,11 @@ class SDHCALDetectorConstruction : public G4VUserDetectorConstruction
 
 		RPCType rpcType = kNormalRPC ;
 		G4bool oldConfig = false ;
+
+	private :
+
+		G4VPhysicalVolume* ConstructECAL();
+		G4VPhysicalVolume* ConstructHCAL();
 } ;
 
 
