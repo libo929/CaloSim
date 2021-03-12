@@ -1,10 +1,10 @@
 import os
 
-particle = 'gamma'
+particle = 'pi+'
 
 doMerge = True
 
-for energy in range(10, 90, 10):
+for energy in range(10, 50, 10):
     sourceFiles = 'output/' + particle + '_' + str(energy) + 'GeV/CaloSim_' + particle + '_' + str(energy) + 'GeV_*.slcio'
     targetFile  = 'output/' + particle + '_' + str(energy) + 'GeV/CaloSim_' + particle + '_' + str(energy) + 'GeV'
 

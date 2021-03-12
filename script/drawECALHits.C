@@ -1,7 +1,7 @@
 void drawHits()
 {
-	const string drawOption = "lego";
-	//const string drawOption = "colz";
+	//const string drawOption = "lego";
+	const string drawOption = "colz";
 
 	TFile* f = new TFile("caloHits.root");
 
@@ -37,8 +37,7 @@ void drawHits()
 	
     TCanvas* c1 = new TCanvas("c1","Hits",10, 10, 600, 600);
 
-	//TH2F* hist = new TH2F("hitsHist", "calo hits", 100, 350, 450, 100, 250, 350);
-	TH2F* hist = new TH2F("hitsHist", "calo hits", 60, 170, 230, 60, 170, 230);
+	TH2F* hist = new TH2F("hitsHist", "calo hits", 100, 150, 250, 100, 150, 250);
 
 	int maxEvt = 10000;
 
