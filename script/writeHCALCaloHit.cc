@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
   if(argc==3) outputFileName = argv[2];
   
   int nEvents = 0;
-  int maxEvt = 1;  // change as needed
+  int maxEvt = 10000;  // change as needed
   int skipEvent = 0; 
 
   TFile* file = new TFile(outputFileName.c_str(), "RECREATE");    
@@ -52,6 +52,8 @@ int main(int argc, char* argv[]) {
   std::vector<float> posVecX;
   std::vector<float> posVecY;
   std::vector<float> posVecZ;
+
+  std::vector<float> timeVec;
  
   std::vector<float> energyVec;
 
@@ -70,6 +72,8 @@ int main(int argc, char* argv[]) {
   outTree->Branch("posVecX", &posVecX);
   outTree->Branch("posVecY", &posVecY);
   outTree->Branch("posVecZ", &posVecZ);
+
+  outTree->Branch("timeVec", &timeVec);
  
   outTree->Branch("energyVec", &energyVec);
 
@@ -92,7 +96,7 @@ int main(int argc, char* argv[]) {
 
 	int event = evt->getEventNumber();
 
-	std::cout << "Event : " << event << std::endl;
+	//std::cout << "Event : " << event << std::endl;
 	
 	const std::string colName("SDHCAL_Proto_EndCap");
 
@@ -132,8 +136,10 @@ int main(int argc, char* argv[]) {
 
 	  for(int iContri = 0; iContri < pSimHit->getNMCContributions(); ++iContri)
 	  {
-		  std::cout << "   --- contribution energy: " << pSimHit->getEnergyCont(iContri)  
-			        << ", " << pSimHit->getTimeCont(iContri) << std::endl;
+		  //std::cout << "   --- contribution energy: " << pSimHit->getEnergyCont(iContri)  
+			//        << ", " << pSimHit->getTimeCont(iContri) << std::endl;
+
+		  timeVec.push_back(pSimHit->getTimeCont(iContri));
 	  }
 
 	  cellVecX.push_back(cellX);
@@ -158,7 +164,7 @@ int main(int argc, char* argv[]) {
 
 	  ++hitSize;
 
-	  std::cout << "hit energy: " << hitEnergy << ", " << cellX << ", " << cellY << ", " << layer << std::endl;
+	  //std::cout << "hit energy: " << hitEnergy << ", " << cellX << ", " << cellY << ", " << layer << std::endl;
     }
 
 	tuple->Fill(event, 0, 0, 0, eventEnergy);
@@ -171,6 +177,8 @@ int main(int argc, char* argv[]) {
 	posVecX.clear();
 	posVecY.clear();
 	posVecZ.clear();
+
+	timeVec.clear();
 
 	energyVec.clear();
   }
